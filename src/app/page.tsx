@@ -1,23 +1,24 @@
 import { preload } from "react-dom";
-import { Outfit } from "next/font/google";
 import { HomeSplash } from "@/components/home-splash/home-splash";
-
-const outfit = Outfit({
-  subsets: ["latin"],
-  display: "swap",
-});
+import { Header } from "@/components/header/header";
+import { SlideOne } from "@/components/slides/SlideOne";
+import { SlideTwo } from "@/components/slides/SlideTwo";
+import { SlideThree } from "@/components/slides/SlideThree";
 
 export default function HomePage() {
-  preload("/lottie/main_character.png", {
+  preload("/assets/animations/hero-character.png", {
     as: "image",
     type: "image/png",
     fetchPriority: "high",
   });
 
   return (
-    <HomeSplash loadingClassName={outfit.className}>
+    <HomeSplash>
+      <Header />
       <main>
-        <h1>front-end-test-1-ui-design</h1>
+        <SlideOne />
+        <SlideTwo />
+        <SlideThree />
       </main>
     </HomeSplash>
   );

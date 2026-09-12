@@ -15,7 +15,7 @@ export function LoadingScreen({ className }: LoadingScreenProps) {
       <div className={styles.illustration}>
         <img
           className={styles.walk}
-          src="/lottie/main_character.png"
+          src="/assets/animations/hero-character.png"
           width={750}
           height={750}
           alt=""

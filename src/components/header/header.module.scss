@@ -1,0 +1,17 @@
+.root {
+  position: fixed;
+  top: 2rem;
+  left: 2.5rem;
+  z-index: var(--z-header);
+}
+
+.logo {
+  display: block;
+  width: clamp(140px, 15vw, 205px);
+  aspect-ratio: 205 / 40;
+  height: auto;
+}
+
+.logo path {
+  fill: var(--color-navy);
+}

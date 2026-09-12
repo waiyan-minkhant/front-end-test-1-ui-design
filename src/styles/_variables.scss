@@ -1,0 +1,42 @@
+:root {
+  --font-family-display: var(--font-display), "Fredoka", system-ui, sans-serif;
+  --font-family-body: var(--font-body), "Plus Jakarta Sans", system-ui, sans-serif;
+
+  --color-navy: #374a91;
+  --color-white: #ffffff;
+  --color-charcoal: #242424;
+  --color-bg-primary: #374a91;
+  --color-bg-secondary: #fff1da;
+
+  --font-size-hero: clamp(2.5rem, 6.5vw, 5.5rem);
+  --font-size-heading: clamp(1.8rem, 4vw, 3.5rem);
+  --font-size-subheading: clamp(1.2rem, 2vw, 1.75rem);
+  --font-size-japanese: clamp(1rem, 1.5vw, 1.25rem);
+  --font-size-body: clamp(0.95rem, 1.2vw, 1.15rem);
+
+  --letter-spacing-japanese: 1.3em;
+  --letter-spacing-tight: -0.03em;
+  --line-height-tight: 1.05;
+  --line-height-loose: 2;
+
+  --z-slide-bg: 0;
+  --z-slide-content: 1;
+  --z-slide-foreground: 2;
+  --z-header: 100;
+}
+
+$color-navy: var(--color-navy);
+$color-white: var(--color-white);
+$color-charcoal: var(--color-charcoal);
+$color-bg-primary: var(--color-bg-primary);
+$color-bg-secondary: var(--color-bg-secondary);
+$color-text-on-primary: var(--color-white);
+$color-text-on-secondary: var(--color-navy);
+
+$font-family-display: var(--font-family-display);
+$font-family-body: var(--font-family-body);
+
+$z-slide-bg: var(--z-slide-bg);
+$z-slide-content: var(--z-slide-content);
+$z-slide-foreground: var(--z-slide-foreground);
+$z-header: var(--z-header);
