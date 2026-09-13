@@ -3,7 +3,7 @@
 
 .slide {
   @include full-viewport-slide;
-  z-index: $z-slide-bg;
+  z-index: auto;
   color: $color-text-on-secondary;
   background-color: transparent;
   --col-mid: 2;
@@ -42,11 +42,17 @@
 }
 
 .character {
+  --crop-w: 1;
+  --crop-h: 1;
   --anchor-x: -50%;
   --anchor-y: -20%;
   --nudge-x: 0px;
   --nudge-y: 0px;
   --front-drop: 0px;
+  --walk-left: 0%;
+  --walk-top: 0%;
+  --walk-w: 100%;
+  --walk-h: 100%;
   position: absolute;
   left: calc(
     50% + (var(--col) - var(--col-mid)) * var(--col-gap) +
@@ -58,8 +64,8 @@
       var(--front-drop)
   );
   z-index: calc(var(--row) * 5 + var(--col) + 1);
-  width: 150vh;
-  height: 150vh;
+  width: calc(150vh * var(--crop-w));
+  height: calc(150vh * var(--crop-h));
   overflow: visible;
   pointer-events: none;
   transform: translate(var(--anchor-x), var(--anchor-y));
@@ -93,21 +99,12 @@
   position: relative;
 }
 
-.heroLive,
 .bitmap {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-}
-
-.heroLive {
-  z-index: 1;
-}
-
-.bitmap {
-  z-index: 0;
   visibility: hidden;
 }
 
@@ -119,25 +116,51 @@
   position: relative;
 }
 
-.still,
-.lottie {
+.still {
   display: block;
-  width: 127%;
-  height: 127%;
-  margin-left: -15%;
-  margin-top: -15%;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 
-.stillWrap,
-.lottieWrap {
+.stillWrap {
   position: absolute;
   inset: 0;
+  z-index: 2;
 }
 
-.lottieWrap {
+.lottieWrap,
+.walkWrap {
+  position: absolute;
+  left: var(--walk-left);
+  top: var(--walk-top);
+  z-index: 1;
+  width: var(--walk-w);
+  height: var(--walk-h);
+  max-width: none;
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
+}
+
+.lottieHost {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.lottieHost :global(svg) {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.walk {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  clip-path: inset(0 0 9.8% 0);
 }
 
 @keyframes bob {

@@ -45,11 +45,12 @@ export function SlideTwo() {
         </div>
       </div>
 
-      <div className={styles.heroSlot} data-hero-slot aria-hidden="true" />
-
-      <p className={styles.logoOverlay} data-slide-two-logo aria-hidden="true">
-        Fluffy Hugs
-      </p>
+      <div className={styles.cluster}>
+        <p className={styles.logoOverlay} data-slide-two-logo aria-hidden="true">
+          Fluffy Hugs
+        </p>
+        <div className={styles.heroSlot} data-hero-slot aria-hidden="true" />
+      </div>
     </section>
   );
 }

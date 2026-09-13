@@ -3,7 +3,7 @@
 
 .slide {
   @include full-viewport-slide;
-  z-index: $z-slide-bg;
+  z-index: auto;
   background-color: $color-bg-secondary;
   color: $color-text-on-secondary;
 }
@@ -110,27 +110,25 @@
   width: min(52vw, 30rem);
 }
 
-.heroSlot {
-  position: absolute;
-  top: 54%;
-  left: 50%;
-  z-index: 1;
-  width: min(72vw, 38rem);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  visibility: hidden;
-}
-
-.logoOverlay {
+.cluster {
   position: absolute;
   top: 20%;
   left: 50%;
   z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
   width: 70vw;
-  margin: 0;
   transform: translateX(-50%);
   pointer-events: none;
+}
+
+.logoOverlay {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  margin: 0;
   font-family: $font-family-display;
   font-size: 14vw;
   font-weight: 700;
@@ -142,28 +140,49 @@
   text-shadow: 0 1px 10px rgba(36, 36, 36, 0.28);
 }
 
+.heroSlot {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: min(78vw, 42rem);
+  aspect-ratio: 1;
+  margin-top: calc(min(78vw, 42rem) * -0.36);
+  pointer-events: none;
+  visibility: hidden;
+}
+
 @include tablet {
-  .logoOverlay {
+  .cluster {
     top: 50%;
+    width: 78vw;
     transform: translate(-50%, -50%);
   }
 
+  .logoOverlay {
+    font-size: 13vw;
+  }
+
   .heroSlot {
-    top: 76%;
-    width: min(68vw, 44dvh);
+    width: min(70vw, 42dvh);
+    margin-top: calc(min(70vw, 42dvh) * -0.34);
   }
 }
 
 @include mobile {
-  .heroSlot {
-    top: 58%;
-    width: min(70vw, 56dvh);
+  .cluster {
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
   }
 
   .logoOverlay {
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 12vw;
+    font-size: 19.9vw;
+  }
+
+  .heroSlot {
+    width: 100%;
+    margin-top: -36vw;
   }
 
   .blob {

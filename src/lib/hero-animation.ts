@@ -32,7 +32,9 @@ function withoutNotes(data: LottieData): LottieData {
 
 export const HERO_LOTTIE = withoutNotes(rawAnimation as LottieData);
 export const STILL_FRAME = 30;
-export const WALK_SEGMENT = [30, 62] as const;
+export const WALK_SEGMENT: [number, number] = [30, 62];
+export const HERO_WALK_SLOW = 0.35;
+export const HERO_WALK_SRC = "/assets/animations/hero-character.png";
 
 export const CROWD_HUES = [
   "80deg",

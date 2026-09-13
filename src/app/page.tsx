@@ -22,6 +22,12 @@ export default function HomePage() {
     as: "fetch",
     crossOrigin: "anonymous",
   });
+  preload("/assets/crowd/hero-still-2x.webp", {
+    as: "image",
+    type: "image/webp",
+    imageSrcSet:
+      "/assets/crowd/hero-still-1x.webp 1x, /assets/crowd/hero-still-2x.webp 2x",
+  });
   for (const n of [1, 2, 3, 4, 5, 6, 7, 8, 9]) {
     preload(`/assets/vectors/blob-${n}.svg`, {
       as: "image",

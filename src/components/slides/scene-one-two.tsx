@@ -11,15 +11,16 @@ import {
   SLIDE_WARM_EVENT,
   type SlideChangeDetail,
 } from "@/lib/slides";
+import { HERO_WALK_SRC } from "@/lib/hero-animation";
 import {
-  HERO_WALK_NORMAL,
-  HERO_WALK_SLOW,
-  isHeroWalkReady,
-  pauseHeroWalk,
-  playHeroWalk,
-  primeHeroWalk,
-  setHeroWalkSpeed,
-} from "./hero-lottie";
+  destroyHeroLottie,
+  mountHeroLottie,
+  pauseHeroRest,
+  playHeroWalkSlow,
+  sleepHeroLottie,
+  wakeHeroLottie,
+  whenHeroLottieReady,
+} from "@/lib/hero-lottie";
 import { SlideOne } from "./SlideOne";
 import { SlideTwo } from "./SlideTwo";
 import { SlideThree } from "./SlideThree";
@@ -42,9 +43,13 @@ export function SceneOneTwo() {
     const spin = scene.querySelector<HTMLElement>("[data-hero-spin]");
     const breath = scene.querySelector<HTMLElement>("[data-hero-breath]");
     const still = scene.querySelector<HTMLElement>("[data-hero-still]");
-    const heroLive = scene.querySelector<HTMLElement>("[data-hero-live]");
     const heroBitmap = scene.querySelector<HTMLElement>("[data-hero-bitmap]");
+    const lottieWrap = scene.querySelector<HTMLElement>("[data-hero-lottie]");
+    const lottieHost = scene.querySelector<HTMLElement>(
+      "[data-hero-lottie-host]",
+    );
     const walk = scene.querySelector<HTMLElement>("[data-hero-walk]");
+    const walkImg = walk?.querySelector<HTMLImageElement>("img");
     const bobs = hero ? [hero, ...crowdChars] : crowdChars;
     const backdrop = scene.querySelector<HTMLElement>(
       "[data-slide-one-backdrop]",
@@ -76,9 +81,11 @@ export function SceneOneTwo() {
       !spin ||
       !breath ||
       !still ||
-      !heroLive ||
       !heroBitmap ||
+      !lottieWrap ||
+      !lottieHost ||
       !walk ||
+      !walkImg ||
       !backdrop ||
       !blobsStage ||
       !blobsParallax ||
@@ -150,14 +157,41 @@ export function SceneOneTwo() {
     };
 
     const showMorphBitmaps = () => {
-      gsap.killTweensOf(heroLive);
-      gsap.killTweensOf(heroBitmap);
       gsap.set(heroBitmap, { autoAlpha: 1 });
-      gsap.set(heroLive, { autoAlpha: 0 });
     };
 
     const restoreTicker = () => {
       gsap.ticker.lagSmoothing(500, 33);
+    };
+
+    const sleepLayer = (el: HTMLElement) => {
+      el.style.contentVisibility = "hidden";
+    };
+
+    const wakeLayer = (el: HTMLElement) => {
+      el.style.removeProperty("content-visibility");
+    };
+
+    const hideApng = () => {
+      walkImg.removeAttribute("src");
+      gsap.set(walk, { autoAlpha: 0 });
+    };
+
+    const showApng = () => {
+      walkImg.src = HERO_WALK_SRC;
+      gsap.set(walk, { autoAlpha: 1 });
+    };
+
+    const coverWithLottie = () => {
+      wakeHeroLottie();
+      pauseHeroRest();
+      gsap.set(lottieWrap, { autoAlpha: 1 });
+    };
+
+    const hideLottie = () => {
+      pauseHeroRest();
+      sleepHeroLottie();
+      gsap.set(lottieWrap, { autoAlpha: 0 });
     };
 
     const slotOffset = (
@@ -233,8 +267,8 @@ export function SceneOneTwo() {
     gsap.set(spin, { rotation: 0 });
     gsap.set(breath, { y: 0, rotation: 0 });
     gsap.set(still, { autoAlpha: 1 });
-    gsap.set(heroLive, { autoAlpha: 0 });
     gsap.set(heroBitmap, { autoAlpha: 1 });
+    gsap.set(lottieWrap, { autoAlpha: 0 });
     gsap.set(walk, { autoAlpha: 0 });
     gsap.set(backdrop, { autoAlpha: 1 });
     gsap.set(blobsStage, { autoAlpha: 0 });
@@ -242,6 +276,8 @@ export function SceneOneTwo() {
     gsap.set(logo, { autoAlpha: 0 });
     gsap.set(threeStage, { autoAlpha: 0 });
     gsap.set([threeBlobsTrack, threeAnimalsTrack], { x: 0, xPercent: 0 });
+    sleepLayer(blobsStage);
+    sleepLayer(threeStage);
 
     let idle: gsap.core.Tween | undefined;
     let drift: gsap.core.Tween | undefined;
@@ -459,10 +495,25 @@ export function SceneOneTwo() {
       makeThreeDrifts(blobProgress, animalProgress);
     };
 
+    let stillFadeLocked = false;
+    let reverseCut: gsap.core.Tween | undefined;
+
+    const killReverseCut = () => {
+      reverseCut?.kill();
+      reverseCut = undefined;
+    };
+
+    const cutHeroToStill = () => {
+      reverseCut = undefined;
+      gsap.set(still, { autoAlpha: 1 });
+      hideLottie();
+    };
+
     const morph = gsap.timeline({
       paused: true,
       defaults: { ease },
       onComplete: () => {
+        sleepLayer(crowdLayer);
         emitSettle();
         hold(() => {
           restoreTicker();
@@ -471,10 +522,17 @@ export function SceneOneTwo() {
         });
       },
       onReverseComplete: () => {
+        stillFadeLocked = false;
+        killReverseCut();
+        morph.getTweensOf(still).forEach((tween) => {
+          tween.paused(false);
+          tween.progress(0, true);
+        });
+        gsap.set(still, { autoAlpha: 1 });
+        hideLottie();
+        sleepLayer(blobsStage);
         stopIdle();
         stopDrift();
-        pauseHeroWalk();
-        setHeroWalkSpeed(HERO_WALK_SLOW);
         gsap.set(move, {
           x: 0,
           y: 0,
@@ -524,13 +582,21 @@ export function SceneOneTwo() {
         0,
       )
       .to(spin, { rotation: -90, duration }, 0)
-      .to(still, { autoAlpha: 0, duration: duration * 0.35 }, duration * 0.28)
       .to(
-        walk,
+        still,
         {
-          autoAlpha: 1,
+          autoAlpha: 0,
           duration: duration * 0.35,
-          onStart: playHeroWalk,
+          onStart: () => {
+            if (!reducedMotion) {
+              playHeroWalkSlow();
+            }
+          },
+          onReverseStart: function () {
+            if (stillFadeLocked) {
+              this.pause();
+            }
+          },
         },
         duration * 0.28,
       );
@@ -539,6 +605,7 @@ export function SceneOneTwo() {
       paused: true,
       defaults: { ease, immediateRender: false },
       onComplete: () => {
+        sleepLayer(blobsStage);
         emitSettle();
         hold(() => {
           restoreTicker();
@@ -546,9 +613,14 @@ export function SceneOneTwo() {
         });
       },
       onReverseComplete: () => {
+        sleepLayer(threeStage);
         stopThreeLoops(true);
-        setHeroWalkSpeed(HERO_WALK_SLOW);
         applyHeroToSlot2();
+        coverWithLottie();
+        if (!reducedMotion) {
+          playHeroWalkSlow();
+        }
+        hideApng();
         emitSettle();
         hold(() => {
           restoreTicker();
@@ -606,11 +678,13 @@ export function SceneOneTwo() {
 
     const jumpToSlide1 = () => {
       cancelHold();
+      killReverseCut();
       stopIdle();
       stopDrift();
       stopThreeLoops();
-      setHeroWalkSpeed(HERO_WALK_SLOW);
-      pauseHeroWalk();
+      wakeLayer(crowdLayer);
+      sleepLayer(blobsStage);
+      sleepLayer(threeStage);
       morph23.progress(0, true);
       freezeBobAtRest();
       morph.progress(0, true);
@@ -621,6 +695,8 @@ export function SceneOneTwo() {
         transformOrigin: "50% 50%",
       });
       gsap.set(spin, { rotation: 0 });
+      hideLottie();
+      hideApng();
       restoreTicker();
       restartBob();
       emitSettle();
@@ -628,17 +704,20 @@ export function SceneOneTwo() {
 
     const jumpToSlide3 = () => {
       cancelHold();
+      killReverseCut();
       stopIdle();
       stopDrift();
       pauseBob();
       showMorphBitmaps();
-      primeHeroWalk();
-      playHeroWalk();
-      setHeroWalkSpeed(HERO_WALK_NORMAL);
+      sleepLayer(crowdLayer);
+      sleepLayer(blobsStage);
+      wakeLayer(threeStage);
       captureTargets();
       invalidateMove(morph23);
       morph.progress(1, true);
       morph23.progress(1, true);
+      hideLottie();
+      showApng();
       restoreTicker();
       startThreeLoops();
       emitSettle();
@@ -664,12 +743,12 @@ export function SceneOneTwo() {
 
       if (index === 1 && previous === 0) {
         cancelHold();
+        killReverseCut();
         stopIdle();
         pauseBob();
         showMorphBitmaps();
-        setHeroWalkSpeed(HERO_WALK_SLOW);
-        primeHeroWalk();
-        gsap.ticker.lagSmoothing(0);
+        wakeLayer(blobsStage);
+        coverWithLottie();
         morph.play();
         return;
       }
@@ -678,8 +757,8 @@ export function SceneOneTwo() {
         cancelHold();
         stopIdle();
         stopDrift();
-        pauseHeroWalk();
         freezeBobAtRest();
+        wakeLayer(crowdLayer);
         captureTargets();
         gsap.set(move, {
           x: heroX,
@@ -688,7 +767,16 @@ export function SceneOneTwo() {
           transformOrigin: "50% 50%",
         });
         gsap.set(spin, { rotation: -90 });
-        gsap.ticker.lagSmoothing(0);
+        stillFadeLocked = true;
+        pauseHeroRest();
+        wakeHeroLottie();
+        gsap.set(lottieWrap, { autoAlpha: 1 });
+        killReverseCut();
+        if (duration === 0) {
+          cutHeroToStill();
+        } else {
+          reverseCut = gsap.delayedCall(duration * 0.55, cutHeroToStill);
+        }
         morph.reverse();
         return;
       }
@@ -697,10 +785,11 @@ export function SceneOneTwo() {
         cancelHold();
         stopIdle();
         stopDrift();
+        wakeLayer(threeStage);
         captureTargets();
         invalidateMove(morph23);
-        setHeroWalkSpeed(HERO_WALK_NORMAL);
-        gsap.ticker.lagSmoothing(0);
+        showApng();
+        hideLottie();
         morph23.play();
         return;
       }
@@ -708,10 +797,9 @@ export function SceneOneTwo() {
       if (index === 1 && previous === 2) {
         cancelHold();
         stopThreeLoops(false);
+        wakeLayer(blobsStage);
         captureTargets();
         invalidateMove(morph23);
-        setHeroWalkSpeed(HERO_WALK_SLOW);
-        gsap.ticker.lagSmoothing(0);
         morph23.reverse();
       }
     };
@@ -754,14 +842,14 @@ export function SceneOneTwo() {
 
     let walkWarmed = false;
     let morphWarmed = false;
-    let warmTimer = 0;
+    let lottieWarmed = false;
 
     const emitWarm = () => {
       window.dispatchEvent(new Event(SLIDE_WARM_EVENT));
     };
 
     const maybeEmitWarm = () => {
-      if (walkWarmed && morphWarmed) {
+      if (walkWarmed && morphWarmed && lottieWarmed) {
         emitWarm();
       }
     };
@@ -774,50 +862,54 @@ export function SceneOneTwo() {
       );
 
     const warmMorph = () => {
+      wakeLayer(blobsStage);
+      wakeLayer(threeStage);
       void Promise.all([decodeImages(blobsStage), decodeImages(threeStage)])
         .catch(() => undefined)
         .finally(() => {
           gsap.set([blobsStage, logo], { autoAlpha: 0.001 });
           morph.progress(0.04, true);
           morph.progress(0, true);
+          hideLottie();
+          hideApng();
           requestAnimationFrame(() => {
             gsap.set(blobsStage, { autoAlpha: 0 });
             gsap.set(logo, { autoAlpha: 0 });
             gsap.set(threeStage, { autoAlpha: 0 });
+            sleepLayer(blobsStage);
+            sleepLayer(threeStage);
             morphWarmed = true;
             maybeEmitWarm();
           });
         });
     };
 
-    const warmWalk = (tries = 0) => {
-      if (!isHeroWalkReady()) {
-        if (tries > 120) {
-          walkWarmed = true;
-          maybeEmitWarm();
-          return;
-        }
-        warmTimer = window.setTimeout(() => warmWalk(tries + 1), 50);
-        return;
-      }
-
-      gsap.set(walk, { autoAlpha: 0.001 });
-      primeHeroWalk();
-      playHeroWalk();
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          pauseHeroWalk();
-          primeHeroWalk();
-          setHeroWalkSpeed(HERO_WALK_SLOW);
-          gsap.set(walk, { autoAlpha: 0 });
+    const warmWalk = () => {
+      const image = new Image();
+      image.src = HERO_WALK_SRC;
+      void image
+        .decode()
+        .catch(() => undefined)
+        .finally(() => {
           walkWarmed = true;
           maybeEmitWarm();
         });
-      });
+    };
+
+    const warmLottie = () => {
+      void mountHeroLottie(lottieHost)
+        .then(() => whenHeroLottieReady())
+        .catch(() => undefined)
+        .finally(() => {
+          hideLottie();
+          lottieWarmed = true;
+          maybeEmitWarm();
+        });
     };
 
     warmMorph();
     warmWalk();
+    warmLottie();
 
     return () => {
       window.removeEventListener(SLIDE_CHANGE_EVENT, onChange);
@@ -825,11 +917,12 @@ export function SceneOneTwo() {
       window.visualViewport?.removeEventListener("resize", onResize);
       window.removeEventListener(HOME_READY_EVENT, onHomeReady);
       window.cancelAnimationFrame(resizeRaf);
-      window.clearTimeout(warmTimer);
       cancelHold();
       stopIdle();
       stopDrift();
       stopThreeLoops();
+      killReverseCut();
+      destroyHeroLottie();
       gsap.ticker.lagSmoothing(500, 33);
       morph.kill();
       morph23.kill();

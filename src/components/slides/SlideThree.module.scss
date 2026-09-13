@@ -68,69 +68,61 @@
   width: min(48vw, 28rem);
   height: auto;
   opacity: 0.9;
+  display: block;
 }
 
 .blobA {
   top: -8%;
   left: -6%;
   width: min(42vw, 24rem);
-  filter: hue-rotate(145deg) saturate(0.85) brightness(1.08);
 }
 
 .blobB {
   top: -4%;
   left: 38%;
   width: min(36vw, 22rem);
-  filter: hue-rotate(8deg) saturate(0.7) brightness(1.12);
 }
 
 .blobC {
   top: 8%;
   left: 68%;
   width: min(32vw, 18rem);
-  filter: hue-rotate(-8deg) saturate(0.55) brightness(1.18);
 }
 
 .blobD {
   top: 28%;
   left: 18%;
   width: min(40vw, 24rem);
-  filter: hue-rotate(40deg) saturate(0.6) brightness(1.05);
 }
 
 .blobE {
   top: 36%;
   left: 58%;
   width: min(34vw, 20rem);
-  filter: hue-rotate(155deg) saturate(0.75) brightness(1.12);
 }
 
 .blobF {
   top: 58%;
   left: -10%;
   width: min(38vw, 22rem);
-  filter: hue-rotate(170deg) saturate(0.45) brightness(1.2);
 }
 
 .blobG {
   top: 62%;
   left: 48%;
   width: min(30vw, 16rem);
-  filter: hue-rotate(12deg) saturate(0.8) brightness(1.05);
 }
 
 .blobH {
   top: 72%;
   left: 78%;
   width: min(44vw, 26rem);
-  filter: hue-rotate(-12deg) saturate(1.1) brightness(0.98);
 }
 
 .blobI {
   top: 78%;
   left: 12%;
   width: min(36vw, 20rem);
-  filter: hue-rotate(150deg) saturate(0.5) brightness(1.16);
 }
 
 .animal {
@@ -254,9 +246,9 @@
 .heroSlot {
   position: absolute;
   left: 32%;
-  bottom: -18%;
+  bottom: -7%;
   z-index: 2;
-  width: min(72vh, 38rem);
+  width: min(88vh, 46rem);
   aspect-ratio: 1;
   transform: translateX(-50%);
   pointer-events: none;
@@ -265,13 +257,14 @@
 
 .copy {
   position: absolute;
-  top: 34%;
-  left: auto;
-  right: 7%;
+  top: auto;
+  bottom: 44%;
+  left: 42%;
+  right: auto;
   z-index: 2;
   display: flex;
   flex-direction: column;
-  width: min(var(--japanese-hero-width), 52vw);
+  width: min(var(--japanese-hero-width), 50vw);
   max-width: calc(100vw - 10rem);
   margin: 0;
   pointer-events: none;
@@ -279,7 +272,9 @@
 
 .line {
   margin: 0;
-  letter-spacing: var(--letter-spacing-japanese-hero);
+  font-size: clamp(1.2rem, 1.7vw, 1.5rem);
+  line-height: 1.55;
+  letter-spacing: 0.95em;
 }
 
 .lineGap {
@@ -359,39 +354,53 @@
 
 @include tablet {
   .copy {
-    right: 5%;
-    width: min(var(--japanese-hero-width), calc(100vw - 4.5rem));
+    top: calc(
+      var(--chrome-padding-top) + clamp(2.5rem, 5.5vw, 4.25rem) * 1.05 + 4.5rem
+    );
+    bottom: auto;
+    left: calc(#{$chrome-padding-x} + 1.5rem);
+    right: auto;
+    width: min(var(--japanese-hero-width), calc(100vw - 8rem));
+    max-width: none;
+    transform: none;
+    text-align: left;
   }
 
   .copy .line {
     letter-spacing: 0.85em;
-    font-size: clamp(1.05rem, 2.15vw, 1.2rem);
+    font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+    line-height: 1.55;
   }
 
   .heroSlot {
     left: 30%;
-    width: min(64vh, 32rem);
+    bottom: -6%;
+    width: min(70vh, 40rem);
   }
 }
 
 @include mobile {
   .copy {
-    top: 50%;
-    left: 50%;
+    top: calc(1.65rem + clamp(2.5rem, 5.5vw, 4.25rem) * 1.05 + 4.5rem);
+    bottom: auto;
+    left: 2.25rem;
     right: auto;
-    width: min(92vw, 22rem);
-    transform: translate(-50%, -50%);
+    width: calc(100vw - 3.25rem);
+    max-width: none;
+    transform: none;
+    text-align: left;
   }
 
   .copy .line {
     letter-spacing: 0.55em;
     font-size: clamp(0.62rem, 3.1vw, 0.85rem);
+    line-height: var(--line-height-japanese-hero);
   }
 
   .heroSlot {
-    left: 42%;
-    bottom: -6%;
-    width: min(92vw, 68dvh);
+    left: 48%;
+    bottom: -4.5%;
+    width: min(110vw, 51dvh);
   }
 
   .animal {

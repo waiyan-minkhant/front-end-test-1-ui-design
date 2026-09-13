@@ -1,9 +1,13 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { CROWD_HUES, WALK_SEGMENT } from "@/lib/hero-animation";
-import { getCrowdStillSrc, useCrowdStills } from "@/lib/crowd-stills";
-import { bindHeroWalk, SlideOneCharacter } from "./hero-lottie";
+import { CROWD_HUES } from "@/lib/hero-animation";
+import {
+  CROWD_LAYOUT,
+  CROWD_STILL_SIZES,
+  getCrowdStill,
+  getHeroStill,
+} from "@/lib/crowd-stills";
 import styles from "./SlideOne.module.scss";
 
 type CrowdCharacter = {
@@ -51,11 +55,17 @@ type CharacterStyle = CSSProperties & {
   "--col": number;
   "--bob-delay": string;
   "--hue": string;
+  "--crop-w": number;
+  "--crop-h": number;
+  "--anchor-x": string;
+  "--anchor-y": string;
+  "--walk-left": string;
+  "--walk-top": string;
+  "--walk-w": string;
+  "--walk-h": string;
 };
 
 export function SlideOne() {
-  const stills = useCrowdStills();
-
   return (
     <section
       className={styles.slide}
@@ -71,15 +81,17 @@ export function SlideOne() {
       <div className={styles.crowdLayer} data-crowd-layer>
         {CHARACTERS.filter((character) => !character.isHero).map(
           (character) => {
+            const still = getCrowdStill(character.hue);
             const style = {
               "--row": character.row,
               "--col": character.col,
               "--bob-delay": character.delay,
               "--hue": character.hue,
+              "--crop-w": CROWD_LAYOUT.widthRatio,
+              "--crop-h": CROWD_LAYOUT.heightRatio,
+              "--anchor-x": CROWD_LAYOUT.anchorX,
+              "--anchor-y": CROWD_LAYOUT.anchorY,
             } as CharacterStyle;
-            const stillSrc = stills
-              ? getCrowdStillSrc(stills, character.hue)
-              : undefined;
 
             return (
               <div
@@ -91,14 +103,15 @@ export function SlideOne() {
                 style={style}
               >
                 <div className={styles.crowdMove} data-crowd-move>
-                  {stillSrc ? (
-                    <img
-                      className={styles.still}
-                      src={stillSrc}
-                      alt=""
-                      draggable={false}
-                    />
-                  ) : null}
+                  <img
+                    className={styles.still}
+                    src={still.src}
+                    srcSet={still.srcSet}
+                    sizes={CROWD_STILL_SIZES}
+                    alt=""
+                    draggable={false}
+                    decoding="async"
+                  />
                 </div>
               </div>
             );
@@ -107,15 +120,21 @@ export function SlideOne() {
       </div>
 
       {CHARACTERS.filter((character) => character.isHero).map((character) => {
+        const still = getHeroStill();
         const style = {
           "--row": character.row,
           "--col": character.col,
           "--bob-delay": character.delay,
           "--hue": character.hue,
+          "--crop-w": CROWD_LAYOUT.widthRatio,
+          "--crop-h": CROWD_LAYOUT.heightRatio,
+          "--anchor-x": CROWD_LAYOUT.anchorX,
+          "--anchor-y": CROWD_LAYOUT.anchorY,
+          "--walk-left": CROWD_LAYOUT.walkLeft,
+          "--walk-top": CROWD_LAYOUT.walkTop,
+          "--walk-w": CROWD_LAYOUT.walkWidth,
+          "--walk-h": CROWD_LAYOUT.walkHeight,
         } as CharacterStyle;
-        const stillSrc = stills
-          ? getCrowdStillSrc(stills, character.hue)
-          : undefined;
 
         return (
           <div
@@ -129,29 +148,32 @@ export function SlideOne() {
               <div className={styles.heroSpin} data-hero-spin>
                 <div className={styles.heroBreath} data-hero-breath>
                   <div className={styles.heroFigure}>
-                    <div className={styles.stillWrap} data-hero-still>
-                      <div className={styles.heroLive} data-hero-live>
-                        <SlideOneCharacter className={styles.lottie} />
-                      </div>
-                      {stillSrc ? (
-                        <div className={styles.bitmap} data-hero-bitmap>
-                          <img
-                            className={styles.still}
-                            src={stillSrc}
-                            alt=""
-                            draggable={false}
-                          />
-                        </div>
-                      ) : null}
-                    </div>
-                    <div className={styles.lottieWrap} data-hero-walk>
-                      <SlideOneCharacter
-                        className={styles.lottie}
-                        autoplay={false}
-                        loop
-                        segment={WALK_SEGMENT}
-                        lottieRef={bindHeroWalk}
+                    <div className={styles.lottieWrap} data-hero-lottie>
+                      <div
+                        className={styles.lottieHost}
+                        data-hero-lottie-host
                       />
+                    </div>
+                    <div className={styles.walkWrap} data-hero-walk>
+                      <img
+                        className={styles.walk}
+                        alt=""
+                        draggable={false}
+                        decoding="async"
+                      />
+                    </div>
+                    <div className={styles.stillWrap} data-hero-still>
+                      <div className={styles.bitmap} data-hero-bitmap>
+                        <img
+                          className={styles.still}
+                          src={still.src}
+                          srcSet={still.srcSet}
+                          sizes={CROWD_STILL_SIZES}
+                          alt=""
+                          draggable={false}
+                          decoding="async"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
