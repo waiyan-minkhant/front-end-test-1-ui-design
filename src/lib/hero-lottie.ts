@@ -52,14 +52,26 @@ export function whenHeroLottieReady() {
   return readyPromise ?? Promise.resolve();
 }
 
-export function playHeroWalkSlow() {
+export function setHeroWalkSpeed(speed: number) {
+  if (!anim || !ready) {
+    return;
+  }
+
+  anim.setSpeed(speed);
+}
+
+export function playHeroWalkAt(speed: number) {
   if (!anim || !ready) {
     return;
   }
 
   wakeHeroLottie();
-  anim.setSpeed(HERO_WALK_SLOW);
+  anim.setSpeed(speed);
   anim.playSegments(WALK_SEGMENT, true);
+}
+
+export function playHeroWalkSlow() {
+  playHeroWalkAt(HERO_WALK_SLOW);
 }
 
 export function pauseHeroRest() {

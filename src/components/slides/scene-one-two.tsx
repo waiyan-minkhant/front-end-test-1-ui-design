@@ -11,12 +11,14 @@ import {
   SLIDE_WARM_EVENT,
   type SlideChangeDetail,
 } from "@/lib/slides";
-import { HERO_WALK_SRC } from "@/lib/hero-animation";
+import { HERO_WALK_SLOW, HERO_WALK_SRC } from "@/lib/hero-animation";
 import {
   destroyHeroLottie,
   mountHeroLottie,
   pauseHeroRest,
+  playHeroWalkAt,
   playHeroWalkSlow,
+  setHeroWalkSpeed,
   sleepHeroLottie,
   wakeHeroLottie,
   whenHeroLottieReady,
@@ -498,6 +500,13 @@ export function SceneOneTwo() {
     let stillFadeLocked = false;
     let reverseCut: gsap.core.Tween | undefined;
 
+    let walkSpeedTween: gsap.core.Tween | undefined;
+
+    const killWalkSpeed = () => {
+      walkSpeedTween?.kill();
+      walkSpeedTween = undefined;
+    };
+
     const killReverseCut = () => {
       reverseCut?.kill();
       reverseCut = undefined;
@@ -616,11 +625,6 @@ export function SceneOneTwo() {
         sleepLayer(threeStage);
         stopThreeLoops(true);
         applyHeroToSlot2();
-        coverWithLottie();
-        if (!reducedMotion) {
-          playHeroWalkSlow();
-        }
-        hideApng();
         emitSettle();
         hold(() => {
           restoreTicker();
@@ -678,6 +682,7 @@ export function SceneOneTwo() {
 
     const jumpToSlide1 = () => {
       cancelHold();
+      killWalkSpeed();
       killReverseCut();
       stopIdle();
       stopDrift();
@@ -704,6 +709,7 @@ export function SceneOneTwo() {
 
     const jumpToSlide3 = () => {
       cancelHold();
+      killWalkSpeed();
       killReverseCut();
       stopIdle();
       stopDrift();
@@ -755,6 +761,7 @@ export function SceneOneTwo() {
 
       if (index === 0 && previous === 1) {
         cancelHold();
+        killWalkSpeed();
         stopIdle();
         stopDrift();
         freezeBobAtRest();
@@ -783,6 +790,7 @@ export function SceneOneTwo() {
 
       if (index === 2 && previous === 1) {
         cancelHold();
+        killWalkSpeed();
         stopIdle();
         stopDrift();
         wakeLayer(threeStage);
@@ -796,10 +804,23 @@ export function SceneOneTwo() {
 
       if (index === 1 && previous === 2) {
         cancelHold();
+        killWalkSpeed();
         stopThreeLoops(false);
         wakeLayer(blobsStage);
         captureTargets();
         invalidateMove(morph23);
+        coverWithLottie();
+        hideApng();
+        if (!reducedMotion) {
+          playHeroWalkAt(1);
+          const proxy = { speed: 1 };
+          walkSpeedTween = gsap.to(proxy, {
+            speed: HERO_WALK_SLOW,
+            duration,
+            ease,
+            onUpdate: () => setHeroWalkSpeed(proxy.speed),
+          });
+        }
         morph23.reverse();
       }
     };
@@ -921,6 +942,7 @@ export function SceneOneTwo() {
       stopIdle();
       stopDrift();
       stopThreeLoops();
+      killWalkSpeed();
       killReverseCut();
       destroyHeroLottie();
       gsap.ticker.lagSmoothing(500, 33);
