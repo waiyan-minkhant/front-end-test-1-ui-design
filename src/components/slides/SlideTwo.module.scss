@@ -4,44 +4,157 @@
 .slide {
   @include full-viewport-slide;
   z-index: $z-slide-bg;
-  display: flex;
-  align-items: center;
   background-color: $color-bg-secondary;
   color: $color-text-on-secondary;
 }
 
-.content {
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.blobsStage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.blobsParallax {
+  position: absolute;
+  inset: 0;
+}
+
+.blobsTrack {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.blobsColumn {
   position: relative;
-  z-index: $z-slide-content;
-  max-width: 40rem;
-  padding: 2rem 1.5rem;
+  flex: none;
+  width: 100%;
+  height: 150dvh;
+  overflow: visible;
 }
 
-.heading {
-  font-size: var(--font-size-heading);
+.blob {
+  position: absolute;
+  width: min(72vw, 44rem);
+  height: auto;
+  opacity: 0.88;
 }
 
-.text {
-  margin-block-start: 0.75rem;
-  font-size: var(--font-size-body);
-  font-weight: 500;
-  line-height: 1.5;
+.blobA {
+  top: 2%;
+  left: -22%;
 }
 
-@include tablet {
-  .content {
-    padding: 2.5rem 3rem;
-  }
+.blobB {
+  top: 13%;
+  right: -18%;
+  width: min(58vw, 36rem);
 }
 
-@include desktop {
-  .content {
-    padding: 3rem 4.5rem;
-  }
+.blobC {
+  top: 29%;
+  left: 8%;
+  width: min(48vw, 30rem);
+}
+
+.blobD {
+  top: 22%;
+  left: 42%;
+  width: min(40vw, 24rem);
+}
+
+.blobE {
+  top: 42%;
+  right: -8%;
+  width: min(62vw, 38rem);
+}
+
+.blobF {
+  top: 45%;
+  left: -16%;
+  width: min(50vw, 32rem);
+}
+
+.blobG {
+  top: 58%;
+  left: 22%;
+  width: min(56vw, 34rem);
+}
+
+.blobH {
+  top: 62%;
+  right: 6%;
+  width: min(44vw, 26rem);
+}
+
+.blobI {
+  top: 71%;
+  left: 48%;
+  width: min(52vw, 30rem);
+}
+
+.heroSlot {
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  z-index: 1;
+  width: min(72vw, 38rem);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.logoOverlay {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  z-index: 40;
+  width: 70vw;
+  margin: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+  font-family: $font-family-display;
+  font-size: 14vw;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: var(--letter-spacing-tight);
+  color: $color-accent;
+  text-align: center;
+  white-space: nowrap;
+  text-shadow: 0 1px 10px rgba(36, 36, 36, 0.28);
 }
 
 @include mobile {
-  .content {
-    padding: 1.5rem 1.25rem;
+  .heroSlot {
+    top: 58%;
+    width: min(70vw, 56dvh);
+  }
+
+  .logoOverlay {
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12vw;
+  }
+
+  .blob {
+    width: min(92vw, 22rem);
   }
 }

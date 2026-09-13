@@ -1,0 +1,21 @@
+@use "../../styles/variables" as *;
+
+.scene {
+  position: relative;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  background-color: $color-bg-secondary;
+}
+
+.scene :global(section) {
+  position: absolute;
+  inset: 0;
+  isolation: auto;
+  contain: none;
+  transform: none;
+  background-color: transparent;
+}

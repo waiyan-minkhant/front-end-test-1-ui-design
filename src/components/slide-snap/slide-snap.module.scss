@@ -1,0 +1,24 @@
+.root {
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+  touch-action: none;
+}
+
+.track {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 100dvh;
+  will-change: transform;
+}
+
+.track > :global(*) {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.track :global(section:not([data-active])),
+.track > :global(*:not([data-active])) {
+  visibility: hidden;
+  pointer-events: none;
+}

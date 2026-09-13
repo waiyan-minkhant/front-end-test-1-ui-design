@@ -1,9 +1,16 @@
 import { preload } from "react-dom";
 import { HomeSplash } from "@/components/home-splash/home-splash";
 import { Header } from "@/components/header/header";
-import { SlideOne } from "@/components/slides/SlideOne";
-import { SlideTwo } from "@/components/slides/SlideTwo";
-import { SlideThree } from "@/components/slides/SlideThree";
+import { SlideSnap } from "@/components/slide-snap/slide-snap";
+import { SceneOneTwo } from "@/components/slides/scene-one-two";
+
+const ANIMALS = [
+  "animal-chipmunk",
+  "animal-koala",
+  "animal-pig",
+  "animal-deer",
+  "animal-rat",
+] as const;
 
 export default function HomePage() {
   preload("/assets/animations/hero-character.png", {
@@ -11,15 +18,33 @@ export default function HomePage() {
     type: "image/png",
     fetchPriority: "high",
   });
+  preload("/assets/animations/hero-character.json", {
+    as: "fetch",
+    crossOrigin: "anonymous",
+  });
+  for (const n of [1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+    preload(`/assets/vectors/blob-${n}.svg`, {
+      as: "image",
+      type: "image/svg+xml",
+    });
+  }
+  for (const animal of ANIMALS) {
+    preload(`/assets/vectors/${animal}.svg`, {
+      as: "image",
+      type: "image/svg+xml",
+    });
+  }
+  preload("/assets/vectors/hanging-cat.png", {
+    as: "image",
+    type: "image/png",
+  });
 
   return (
     <HomeSplash>
       <Header />
-      <main>
-        <SlideOne />
-        <SlideTwo />
-        <SlideThree />
-      </main>
+      <SlideSnap>
+        <SceneOneTwo />
+      </SlideSnap>
     </HomeSplash>
   );
 }

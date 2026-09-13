@@ -12,7 +12,8 @@ html,
 body {
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
+  overscroll-behavior: none;
   scrollbar-width: none;
   -ms-overflow-style: none;
   background-color: var(--color-bg-primary);
@@ -38,22 +39,15 @@ h3,
 }
 
 .japaneseText {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family-japanese);
   font-size: var(--font-size-japanese);
   font-weight: 700;
-  line-height: var(--line-height-loose);
+  line-height: var(--line-height-japanese-hero);
   letter-spacing: var(--letter-spacing-japanese);
   color: var(--color-navy);
   user-select: none;
   pointer-events: none;
   white-space: nowrap;
-  text-shadow:
-    -1px -1px 0 #fff,
-    0px -1px 0 #fff,
-    1px -1px 0 #fff,
-    -1px 0px 0 #fff,
-    1px 0px 0 #fff,
-    -1px 1px 0 #fff,
-    0px 1px 0 #fff,
-    1px 1px 0 #fff;
+  -webkit-font-smoothing: antialiased;
+  text-shadow: var(--japanese-text-shadow);
 }

@@ -1,17 +1,142 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
 .root {
   position: fixed;
-  top: 2rem;
-  left: 2.5rem;
-  z-index: var(--z-header);
+  inset: 0;
+  z-index: $z-header;
+  pointer-events: none;
+}
+
+.logo,
+.socials,
+.collection {
+  pointer-events: auto;
 }
 
 .logo {
-  display: block;
-  width: clamp(140px, 15vw, 205px);
-  aspect-ratio: 205 / 40;
-  height: auto;
+  position: absolute;
+  top: $chrome-padding-top;
+  left: $chrome-padding-x;
+  margin: 0;
+  font-family: $font-family-display;
+  font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: var(--letter-spacing-tight);
+  color: $color-accent;
+  text-shadow:
+    0 0 2px rgba(255, 255, 255, 0.95),
+    0 0 10px rgba(255, 248, 240, 0.9),
+    0 0 22px rgba(255, 255, 255, 0.65),
+    0 1px 2px rgba(36, 36, 36, 0.4);
+  -webkit-text-stroke: 0.6px rgba(36, 36, 36, 0.28);
+  paint-order: stroke fill;
+  transition: opacity 0.4s ease;
 }
 
-.logo path {
-  fill: var(--color-navy);
+.logoHidden,
+.logo[data-hidden="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.socials {
+  position: absolute;
+  bottom: $chrome-footer-bottom;
+  left: $chrome-padding-x;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.social {
+  display: block;
+  line-height: 0;
+  transform-origin: 50% 50%;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+
+  img {
+    display: block;
+    width: 2.45rem;
+    height: 2.45rem;
+    object-fit: contain;
+  }
+
+  &:hover,
+  &:focus-visible {
+    transform: scale(0.86);
+  }
+}
+
+.collection {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: clamp(16.5rem, 26vw, 21rem);
+  height: clamp(12.5rem, 20vw, 16.5rem);
+  overflow: visible;
+  text-decoration: none;
+}
+
+.blob {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: $color-accent;
+  pointer-events: none;
+  transform: translate(12%, 35%);
+}
+
+.collectionLabel {
+  position: absolute;
+  right: $chrome-padding-x;
+  bottom: $chrome-footer-bottom;
+  z-index: 1;
+  margin: 0;
+  font-family: $font-family-collection;
+  font-size: $font-size-collection;
+  font-weight: 600;
+  letter-spacing: $letter-spacing-collection;
+  line-height: 1;
+  color: $color-white;
+  text-align: right;
+  text-transform: lowercase;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.5s ease 0s;
+  transition-behavior: normal;
+}
+
+@include mobile {
+  .root {
+    --chrome-padding-x: 0.75rem;
+    --chrome-padding-top: 1.65rem;
+    --chrome-footer-bottom: 1.4rem;
+  }
+
+  .socials {
+    gap: 0.9rem;
+  }
+
+  .social img {
+    width: 1.95rem;
+    height: 1.95rem;
+  }
+
+  .collection {
+    width: 13.5rem;
+    height: 10.5rem;
+  }
+
+  .collectionLabel {
+    bottom: $chrome-footer-bottom;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social {
+    transition: none;
+  }
 }

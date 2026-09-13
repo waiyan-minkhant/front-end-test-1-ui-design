@@ -5,19 +5,36 @@
   --color-navy: #374a91;
   --color-white: #ffffff;
   --color-charcoal: #242424;
+  --color-accent: #e24a4a;
   --color-bg-primary: #374a91;
   --color-bg-secondary: #fff1da;
 
   --font-size-hero: clamp(2.5rem, 6.5vw, 5.5rem);
   --font-size-heading: clamp(1.8rem, 4vw, 3.5rem);
   --font-size-subheading: clamp(1.2rem, 2vw, 1.75rem);
-  --font-size-japanese: clamp(1rem, 1.5vw, 1.25rem);
+  --font-size-japanese: clamp(0.78rem, 1.35vw, 20.064px);
   --font-size-body: clamp(0.95rem, 1.2vw, 1.15rem);
+  --font-family-collection: "fot-udmarugo-large-pr6n", sans-serif;
+  --font-family-japanese: "fot-udmarugo-large-pr6n", "Hiragino Maru Gothic Pro",
+    "Arial Rounded MT Bold", sans-serif;
+  --font-size-collection: clamp(0.7rem, 1.15vw, 0.95rem);
+  --letter-spacing-collection: 0.3em;
 
   --letter-spacing-japanese: 1.3em;
+  --letter-spacing-japanese-hero: 26.0832px;
   --letter-spacing-tight: -0.03em;
   --line-height-tight: 1.05;
   --line-height-loose: 2;
+  --line-height-japanese-hero: 40.128px;
+  --japanese-hero-width: 752.391px;
+  --japanese-hero-height: 160.5px;
+  --japanese-text-shadow: -1px -1px 0 #fff, 0px -1px 0 #fff, 1px -1px 0 #fff,
+    -1px 0px 0 #fff, 1px 0px 0 #fff, -1px 1px 0 #fff, 0px 1px 0 #fff,
+    1px 1px 0 #fff;
+
+  --chrome-padding-x: 2.75rem;
+  --chrome-padding-top: 2.85rem;
+  --chrome-footer-bottom: 2.15rem;
 
   --z-slide-bg: 0;
   --z-slide-content: 1;
@@ -28,6 +45,7 @@
 $color-navy: var(--color-navy);
 $color-white: var(--color-white);
 $color-charcoal: var(--color-charcoal);
+$color-accent: var(--color-accent);
 $color-bg-primary: var(--color-bg-primary);
 $color-bg-secondary: var(--color-bg-secondary);
 $color-text-on-primary: var(--color-white);
@@ -35,6 +53,13 @@ $color-text-on-secondary: var(--color-navy);
 
 $font-family-display: var(--font-family-display);
 $font-family-body: var(--font-family-body);
+$font-family-collection: var(--font-family-collection);
+$font-family-japanese: var(--font-family-japanese);
+$font-size-collection: var(--font-size-collection);
+$letter-spacing-collection: var(--letter-spacing-collection);
+$chrome-padding-x: var(--chrome-padding-x);
+$chrome-padding-top: var(--chrome-padding-top);
+$chrome-footer-bottom: var(--chrome-footer-bottom);
 
 $z-slide-bg: var(--z-slide-bg);
 $z-slide-content: var(--z-slide-content);

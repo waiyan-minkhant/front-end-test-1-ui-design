@@ -4,51 +4,154 @@
 .slide {
   @include full-viewport-slide;
   z-index: $z-slide-bg;
-  display: flex;
-  align-items: center;
-  background-color: $color-bg-primary;
-  color: $color-text-on-primary;
+  color: $color-text-on-secondary;
+  background-color: transparent;
+  --col-mid: 2;
+  --row-mid: 3;
+  --col-gap: 28.8vh;
+  --row-gap: 22vh;
+  --skew-x: 19.2vh;
+  --skew-y: 4vh;
 }
 
-.content {
-  position: relative;
-  z-index: $z-slide-content;
-  max-width: 40rem;
-  padding: 2rem 1.5rem;
-}
-
-.heading {
-  font-size: var(--font-size-heading);
-}
-
-.text {
-  margin-block-start: 0.75rem;
-  font-size: var(--font-size-body);
-  font-weight: 500;
-  line-height: 1.5;
-}
-
-.japaneseText {
+.backdrop {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  z-index: $z-slide-foreground;
+  inset: 0;
+  z-index: 0;
+  background-color: $color-bg-secondary;
+  pointer-events: none;
 }
 
-@include tablet {
-  .content {
-    padding: 2.5rem 3rem;
+.crowdLayer {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.character {
+  --anchor-x: -50%;
+  --anchor-y: -20%;
+  --nudge-x: 0px;
+  --nudge-y: 0px;
+  --front-drop: 0px;
+  position: absolute;
+  left: calc(
+    50% + (var(--col) - var(--col-mid)) * var(--col-gap) +
+      (var(--row) - var(--row-mid)) * var(--skew-x) + var(--nudge-x)
+  );
+  top: calc(
+    50% + (var(--row) - var(--row-mid)) * var(--row-gap) +
+      (var(--col) - var(--col-mid)) * var(--skew-y) + var(--nudge-y) +
+      var(--front-drop)
+  );
+  z-index: calc(var(--row) * 5 + var(--col) + 1);
+  width: 150vh;
+  height: 150vh;
+  overflow: visible;
+  pointer-events: none;
+  transform: translate(var(--anchor-x), var(--anchor-y));
+  animation: bob 0.5s ease-in-out calc(-1 * var(--bob-delay, 0s)) infinite
+    alternate;
+}
+
+.character[data-hero-row="true"] {
+  --nudge-x: 12.8vh;
+  --nudge-y: 10vh;
+}
+
+.character[data-front="true"] {
+  --front-drop: 16vh;
+}
+
+.hero {
+  z-index: 30;
+}
+
+.crowdMove,
+.heroMove,
+.heroSpin,
+.heroBreath,
+.heroFigure {
+  width: 100%;
+  height: 100%;
+}
+
+.crowdMove {
+  position: relative;
+}
+
+.heroLive,
+.bitmap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.heroLive {
+  z-index: 1;
+}
+
+.bitmap {
+  z-index: 0;
+  visibility: hidden;
+}
+
+.heroSpin {
+  transform-origin: 50% 48%;
+}
+
+.heroFigure {
+  position: relative;
+}
+
+.still,
+.lottie {
+  display: block;
+  width: 127%;
+  height: 127%;
+  margin-left: -15%;
+  margin-top: -15%;
+  pointer-events: none;
+}
+
+.stillWrap,
+.lottieWrap {
+  position: absolute;
+  inset: 0;
+}
+
+.lottieWrap {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes bob {
+  from {
+    transform: translate(var(--anchor-x), var(--anchor-y));
+  }
+
+  to {
+    transform: translate(var(--anchor-x), calc(var(--anchor-y) - 3.5vh));
   }
 }
 
-@include desktop {
-  .content {
-    padding: 3rem 4.5rem;
-  }
-}
-
-@include mobile {
-  .content {
-    padding: 1.5rem 1.25rem;
+@media (prefers-reduced-motion: reduce) {
+  .character {
+    animation: none;
   }
 }
