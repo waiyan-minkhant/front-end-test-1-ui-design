@@ -1,3 +1,5 @@
+@use "../../styles/mixins" as *;
+
 .root {
   display: flex;
   flex-direction: column;
@@ -7,11 +9,12 @@
   overflow: hidden;
   background: #fff;
   padding: clamp(1.5rem, 4vh, 3.5rem) clamp(1rem, 4vw, 3rem);
+  --mark: clamp(140px, 18vw, 180px);
 }
 
 .illustration {
-  width: 140px;
-  height: 140px;
+  width: var(--mark);
+  height: var(--mark);
   aspect-ratio: 1 / 1;
   flex-shrink: 0;
 }
@@ -32,11 +35,11 @@
 
 .label {
   margin-block-start: clamp(0.75rem, 2vh, 1.25rem);
-  padding-inline-start: 0.5em;
   color: #0b1c8d;
-  font-size: clamp(0.7rem, 1.4vw, 0.85rem);
   font-weight: 500;
-  letter-spacing: 0.5em;
   line-height: 1;
   text-transform: uppercase;
+  font-size: calc(var(--mark) * 0.075);
+  letter-spacing: 0.5em;                 
+  padding-inline-start: 0.5em;
 }

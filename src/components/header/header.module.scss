@@ -109,11 +109,21 @@
   transition-behavior: normal;
 }
 
+@include tablet {
+  .root {
+    --chrome-footer-bottom: 0.8rem;
+  }
+
+  .collectionLabel {
+    bottom: 1.4rem;
+  }
+}
+
 @include mobile {
   .root {
     --chrome-padding-x: 0.75rem;
     --chrome-padding-top: 1.65rem;
-    --chrome-footer-bottom: 1.4rem;
+    --chrome-footer-bottom: 0.55rem;
   }
 
   .socials {
@@ -131,7 +141,7 @@
   }
 
   .collectionLabel {
-    bottom: $chrome-footer-bottom;
+    bottom: 1.4rem;
   }
 }
 
